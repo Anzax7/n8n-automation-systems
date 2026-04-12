@@ -1,0 +1,233 @@
+{
+  "name": "CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "565111f8-b661-429d-bdb6-377d7622eca5",
+      "name": "When chat message received",
+      "webhookId": "9f037308-669b-471b-acc5-38b992d889fa"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=this is the user's message:\n{{ $json.chatInput }}\n# instructions :\nAlways use data from the provided sheet\nYou are an AI Email Assistant that writes concise and professional business emails.\nYour tasks:\n\nRead my input and understand the purpose of the email.\n\nAutomatically fetch any required information from the connected Google Sheet using the provided tool (customer details, order info, dates, prices, status, etc.).\n\nUse the fetched data accurately and include it cleanly in the email.\n\nWrite in a polished business tone — no filler, no slang.\n\nStructure every email with:\n\nSubject line\n\nGreeting\n\nClear, direct body\n\nCall-to-action (if needed)\n\nProfessional closing\n\nKeep it short unless I explicitly ask for a detailed version.\n\nOutput ONLY the final email — no explanations\nAnd at last may name: Nayan",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        0
+      ],
+      "id": "b3718b76-f3a6-46bc-8251-7bb3b19869bd",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "2cef52b5-84ff-474e-b666-578e4f0d7f5c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "7FLFRjMCssQH4rsp",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        224
+      ],
+      "id": "eaeac405-9943-49e0-af53-082f3b3ea66f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1GHUkk245paCHQZwuPUoUBhTvJQKMHNSZgEHzPV-JCDQ/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 663027871,
+          "mode": "list",
+          "cachedResultName": "generate a large sample crm data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GHUkk245paCHQZwuPUoUBhTvJQKMHNSZgEHzPV-JCDQ/edit#gid=663027871"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        224
+      ],
+      "id": "d75d647f-9cf1-4c3e-9944-2da26898e946",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uO0ilNW1jhUxkg9r",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        160
+      ],
+      "id": "b65c0212-6a7e-41d4-a811-eb53aa9b7c42",
+      "name": "Send a message in Gmail",
+      "webhookId": "273da60b-efd8-40e8-9718-62c9eb098b20",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cQGVxYrIQQv8rajA",
+          "name": "Gmail account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        240
+      ],
+      "id": "bac4fea3-ba88-4a75-8217-ddf85dc76895",
+      "name": "Send a message in Gmail1",
+      "webhookId": "273da60b-efd8-40e8-9718-62c9eb098b20",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cQGVxYrIQQv8rajA",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9ddd745a-1b09-4894-bf03-ea95a4f67014",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c72787d1da6ff71608db0a0bd6d3d5cef982225acbe1fee19e015541c681e509"
+  },
+  "id": "BMmt6XCxtTkzU0QZ",
+  "tags": []
+}
